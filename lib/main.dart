@@ -6,7 +6,6 @@ import 'package:check_to_check/core/models/TimeLineEntryModel.dart';
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
 import 'package:check_to_check/widgets/TimeLineEntry.dart';
 
 void main() {
@@ -29,7 +28,6 @@ class RandomWords extends StatefulWidget {
 }
 
 class _RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
   final _saved = <WordPair>{};
   final _biggerFont = TextStyle(fontSize: 18.0);
   final _entries = <TimeLineEntryModel>[
@@ -51,8 +49,8 @@ class _RandomWordsState extends State<RandomWords> {
   }
 
   Widget _buildSuggestions() {
-    return ListView.separated(
-        padding: EdgeInsets.all(16.0),
+    return MediaQuery.of(context).size.width > 600 ? ListView.separated(
+        padding: EdgeInsets.all(8.0),
         itemCount: _entries.length,
         itemBuilder: /*1*/ (context, i) {
           return TimeLineEntry(model: _entries[i], onToggled: _toggleEnabled);
@@ -60,6 +58,13 @@ class _RandomWordsState extends State<RandomWords> {
         separatorBuilder: (context, i) {
           return Divider();
         },
+    ) :
+    ListView.builder(
+      padding: EdgeInsets.all(8.0),
+      itemCount: _entries.length,
+      itemBuilder: /*1*/ (context, i) {
+        return TimeLineEntry(model: _entries[i], onToggled: _toggleEnabled);
+      },
     );
   }
 

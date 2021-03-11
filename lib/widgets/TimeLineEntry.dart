@@ -9,16 +9,20 @@ class TimeLineEntry extends StatelessWidget {
   final ValueChanged<int> onToggled;
 
   void _handleToggle(bool value) {
-      onToggled(model.id);
+    onToggled(model.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    final amount = model.isIncome ? "+ "+model.amount : model.amount;
+    final amount = model.isIncome ? "+ " + model.amount : model.amount;
     final subTitleStyle = new TextStyle(fontWeight: FontWeight.bold);
-    final TextStyle amountStyle = model.isIncome ? new TextStyle(fontStyle: FontStyle.italic, color: Color(0xff07ce07), fontWeight: FontWeight.bold) : subTitleStyle;
-    return LayoutBuilder(
-        builder: (context, constraints) {
+    final TextStyle amountStyle = model.isIncome
+        ? new TextStyle(
+            fontStyle: FontStyle.italic,
+            color: Color(0xff07ce07),
+            fontWeight: FontWeight.bold)
+        : subTitleStyle;
+    return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth > 600) {
         return _buildWide(amount, subTitleStyle, amountStyle);
       } else {
@@ -28,7 +32,8 @@ class TimeLineEntry extends StatelessWidget {
   }
 
   //Used for wide displays
-  Widget _buildWide(String amount, TextStyle subTitleStyle, TextStyle amountStyle) {
+  Widget _buildWide(
+      String amount, TextStyle subTitleStyle, TextStyle amountStyle) {
     return CheckboxListTile(
       value: model.enabled,
       controlAffinity: ListTileControlAffinity.leading,
@@ -42,23 +47,23 @@ class TimeLineEntry extends StatelessWidget {
           children: [
             Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text(model.date, style: subTitleStyle)],
-                )),
-            Expanded( child:Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [Text(model.date, style: subTitleStyle)],
+            )),
+            Expanded(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [Text(amount, style: amountStyle)],
             )),
-            Expanded( child:Column(
+            Expanded(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [Text(model.newTotal, style: subTitleStyle)],
             )),
           ]),
       secondary: IconButton(
-        icon: Icon(
-            Icons.edit_outlined,
-            color: Colors.blueAccent),
-        onPressed: (){
+        icon: Icon(Icons.edit_outlined, color: Colors.blueAccent),
+        onPressed: () {
           debugPrint("Clicked on edit");
         },
       ),
@@ -69,38 +74,59 @@ class TimeLineEntry extends StatelessWidget {
   }
 
   //Used for smaller displays
-  Widget _buildCompact(String amount, TextStyle subTitleStyle, TextStyle amountStyle) {
-    return CheckboxListTile(
-      value: model.enabled,
-      controlAffinity: ListTileControlAffinity.leading,
-      title: Text(
-        model.description + " "+model.date,
-        style: _biggerFont,
-      ),
-      subtitle: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
+  Widget _buildCompact(
+      String amount, TextStyle subTitleStyle, TextStyle amountStyle) {
+    return Padding(
+        padding: const EdgeInsets.all(0),
+        child: Card(
+            child: Column(
           children: [
-            Expanded( child:Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [Text(amount, style: amountStyle)],
-            )),
-            Expanded( child:Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [Text(model.newTotal, style: subTitleStyle)],
-            )),
-          ]),
-      secondary: IconButton(
-        icon: Icon(
-            Icons.edit_outlined,
-            color: Colors.blueAccent),
-        onPressed: (){
-          debugPrint("Clicked on edit");
-        },
-      ),
-      onChanged: (value) {
-        _handleToggle(value);
-      },
-    );
+            Row(
+              children: [
+                Expanded(
+                    child: CheckboxListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  value: model.enabled,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: Text(
+                    model.description,
+                    style: _biggerFont,
+                  ),
+                  secondary: IconButton(
+                    icon: Icon(Icons.edit_outlined, color: Colors.blueAccent),
+                    onPressed: () {
+                      debugPrint("Clicked on edit");
+                    },
+                  ),
+                  onChanged: (value) {
+                    _handleToggle(value);
+                  },
+                ))
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                  Expanded(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [Text(model.date, style: subTitleStyle)],
+                  )),
+                  Expanded(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [Text(amount, style: amountStyle)],
+                  )),
+                  Expanded(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [Text(model.newTotal, style: subTitleStyle)],
+                  )),
+                ])),
+          ],
+        )));
   }
 }
